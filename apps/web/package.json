@@ -1,6 +1,6 @@
 {
-  "name": "web",
-  "version": "0.0.0",
+  "name": "@ultralocal/web",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -9,19 +9,23 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ultralocal/database": "workspace:*",
+    "@ultralocal/ui": "workspace:*",
+    "@ultralocal/utils": "workspace:*",
     "next": "^13.1.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "ui": "workspace:*"
+    "superjson": "^1.12.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.0.0",
-    "eslint-config-custom": "workspace:*",
-    "eslint": "7.32.0",
-    "tsconfig": "workspace:*",
+    "@prisma/nextjs-monorepo-workaround-plugin": "^4.11.0",
     "@types/node": "^17.0.12",
-    "@types/react": "^18.0.22",
-    "@types/react-dom": "^18.0.7",
-    "typescript": "^4.5.3"
+    "@types/react": "18.0.28",
+    "@types/react-dom": "18.0.11",
+    "@ultralocal/tsconfig": "workspace:*",
+    "eslint": "8.36.0",
+    "eslint-config-custom": "workspace:*",
+    "eslint-plugin-react": "7.31.8",
+    "typescript": "5.0.2"
   }
 }

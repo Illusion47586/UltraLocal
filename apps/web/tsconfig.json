@@ -1,5 +1,15 @@
 {
-  "extends": "tsconfig/nextjs.json",
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "extends": "@ultralocal/tsconfig/nextjs.json",
+  "compilerOptions": {
+    "paths": {
+      "@constants": ["./src/constants"],
+      "@constants/*": ["./src/constants/*"],
+      "@utils": ["./src/utils"],
+      "@utils/*": ["./src/utils/*"],
+      "@app": ["./src/app"],
+      "@app/*": ["./src/app/*"]
+    }
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]
 }

@@ -1,5 +1,5 @@
 {
-  "name": "UltraLocal",
+  "name": "ultralocal",
   "version": "0.0.0",
   "private": true,
   "workspaces": [
@@ -7,19 +7,25 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "turbo run build",
-    "dev": "turbo run dev",
+    "preinstall": "npx only-allow pnpm",
+    "prepare:packages": "ts-node ./scripts/makePackageJsonReady.ts",
+    "build": "NODE_ENV='production' pnpm prepare:packages && turbo run build",
+    "dev": "NODE_ENV='development' pnpm prepare:packages && env-cmd turbo run dev",
     "lint": "turbo run lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "nuke:node_modules": "npx rimraf@3 '**/node_modules'"
   },
   "devDependencies": {
+    "@types/node": "^17.0.12",
+    "env-cmd": "^10.1.0",
     "eslint-config-custom": "workspace:*",
-    "prettier": "latest",
-    "turbo": "latest"
+    "prettier": "^2.8.4",
+    "ts-node": "^10.9.1",
+    "turbo": "^1.8.3",
+    "typescript": "^5.0.2"
   },
   "engines": {
     "node": ">=14.0.0"
   },
-  "dependencies": {},
   "packageManager": "pnpm@7.25.0"
 }
