@@ -39,6 +39,11 @@ export const ERRORS = {
         error: "Invalid body, name attribute in the body is required.",
         status: 400,
       },
+      NAME_AND_PROJECT: {
+        error:
+          "Invalid body, name and projectId attribute in the body is required.",
+        status: 400,
+      },
     },
     FOUND: {
       error:

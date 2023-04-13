@@ -3,6 +3,7 @@ const { combine, timestamp, printf, colorize, align } = winston.format;
 
 declare global {
   var prismaLogger: winston.Logger | undefined;
+  var coreLogger: winston.Logger | undefined;
 }
 
 const getFormatBasedOnNameSpace = (namespace: string) =>
@@ -25,4 +26,14 @@ export const prismaLogger =
     transports: [new winston.transports.Console()],
   });
 
-if (process.env.NODE_ENV !== "production") global.prismaLogger = prismaLogger;
+export const coreLogger =
+  global.coreLogger ||
+  winston.createLogger({
+    format: getFormatBasedOnNameSpace("core"),
+    transports: [new winston.transports.Console()],
+  });
+
+if (process.env.NODE_ENV !== "production") {
+  global.prismaLogger = prismaLogger;
+  global.coreLogger = coreLogger;
+}

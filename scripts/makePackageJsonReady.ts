@@ -2,7 +2,7 @@ import fs from "fs";
 
 const isDev = process.env.NODE_ENV === "development";
 
-const watchPackages = ["database", "utils"];
+const watchPackages = ["core", "utils"];
 let packageNames = "";
 
 const changePackageFiles = (packageName: string, index: number) => {

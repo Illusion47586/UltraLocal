@@ -1,7 +1,6 @@
 import { ERRORS } from "@constants/errors";
 import { isId, prisma, Group } from "@ultralocal/database";
 import { NextResponse } from "next/server";
-import SuperJSON from "superjson";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -21,7 +20,10 @@ export async function GET(request: Request) {
         },
       ],
     },
-    include: { subGroups: true, TagsOnGroups: true },
+    include: {
+      subGroups: true,
+      TagsOnGroups: true,
+    },
   });
   if (!group) {
     const { error, status } = ERRORS.PROJECT.NOT_FOUND;
@@ -32,13 +34,20 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   const orgId = new URL(request.url).searchParams.get("orgId") ?? undefined;
-  if (!orgId) {
+  const projectId =
+    new URL(request.url).searchParams.get("projectId") ?? undefined;
+  const parentGroupId =
+    new URL(request.url).searchParams.get("parentGroupId") ?? undefined;
+  if (!orgId || (!projectId && !parentGroupId)) {
     const { error, status } = ERRORS.PROJECT.INVALID_PARAMS.ORG_ID_ONLY;
     return NextResponse.json(error, { status });
   }
-  const json = SuperJSON.parse<Omit<Group, "id">>(await request.text());
+  const json: Omit<
+    Group,
+    "id" | "organizationId" | "projectId" | "parentGroupId"
+  > = await request.json();
   if (!json.name) {
-    const { error, status } = ERRORS.PROJECT.INVALID_PARAMS.NAME_ONLY;
+    const { error, status } = ERRORS.PROJECT.INVALID_PARAMS.NAME_AND_PROJECT;
     return NextResponse.json(error, { status });
   }
   if (
@@ -52,7 +61,12 @@ export async function POST(request: Request) {
     return NextResponse.json(error, { status });
   }
   const group = await prisma.group.create({
-    data: { ...json, organizationId: orgId },
+    data: {
+      ...json,
+      organizationId: orgId,
+      projectId: projectId,
+      parentGroupId: parentGroupId,
+    },
   });
   return NextResponse.json(group, { status: 200 });
 }
@@ -65,9 +79,7 @@ export async function PATCH(request: Request) {
     const { error, status } = ERRORS.PROJECT.INVALID_PARAMS;
     return NextResponse.json(error, { status });
   }
-  const json = SuperJSON.parse<Omit<Group, "id" | "organizationId">>(
-    await request.text()
-  );
+  const json: Omit<Group, "id" | "organizationId"> = await request.json();
   const group = await prisma.group.findFirst({
     where: {
       AND: [{ organizationId: orgId }, { id: groupId }],
@@ -101,6 +113,6 @@ export async function DELETE(request: Request) {
     const { error, status } = ERRORS.PROJECT.NOT_FOUND;
     return NextResponse.json(error, { status });
   }
-  await prisma.organization.delete({ where: { id: group.id } });
+  await prisma.group.delete({ where: { id: groupId } });
   return NextResponse.json(group, { status: 200 });
 }

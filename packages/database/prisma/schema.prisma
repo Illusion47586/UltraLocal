@@ -7,8 +7,13 @@ generator client {
 
 generator erd {
   provider                  = "prisma-erd-generator"
-  output                    = "../../../apps/docs/src/assets/svg/ERD.svg"
+  output                    = "./ERD.svg"
   includeRelationFromFields = true
+}
+
+generator class_validator {
+  provider = "prisma-class-validator-generator"
+  output   = "../../core/src/dto"
 }
 
 datasource db {
@@ -89,7 +94,7 @@ model Content {
   id             String           @id @unique @default(cuid())
   language       String
   literal        String
-  numberOfParams Int              @map("number_of_params")
+  numberOfParams Int?             @default(0) @map("number_of_params")
   timing         Timing           @default(RUNTIME)
   Label          Label            @relation(fields: [labelId], references: [id], onDelete: Cascade)
   labelId        String           @map("label_id")

@@ -1,7 +1,6 @@
 import { ERRORS } from "@constants/errors";
 import { isId, prisma, Project } from "@ultralocal/database";
 import { NextResponse } from "next/server";
-import SuperJSON from "superjson";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -36,9 +35,7 @@ export async function POST(request: Request) {
     const { error, status } = ERRORS.PROJECT.INVALID_PARAMS.ORG_ID_ONLY;
     return NextResponse.json(error, { status });
   }
-  const json = SuperJSON.parse<Omit<Project, "id" | "organizationId">>(
-    await request.text()
-  );
+  const json: Omit<Project, "id" | "organizationId"> = await request.json();
   if (!json.name) {
     const { error, status } = ERRORS.PROJECT.INVALID_PARAMS.NAME_ONLY;
     return NextResponse.json(error, { status });
@@ -67,9 +64,7 @@ export async function PATCH(request: Request) {
     const { error, status } = ERRORS.PROJECT.INVALID_PARAMS;
     return NextResponse.json(error, { status });
   }
-  const json = SuperJSON.parse<Omit<Project, "id" | "organizationId">>(
-    await request.text()
-  );
+  const json: Omit<Project, "id" | "organizationId"> = await request.json();
   const project = await prisma.project.findFirst({
     where: {
       AND: [{ organizationId: orgId }, { id: projectId }],

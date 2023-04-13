@@ -1,7 +1,6 @@
 import { ERRORS } from "@constants/errors";
 import { prisma, Organization } from "@ultralocal/database";
 import { NextResponse } from "next/server";
-import SuperJSON from "superjson";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -25,7 +24,7 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-  const json = SuperJSON.parse<Omit<Organization, "id">>(await request.text());
+  const json: Omit<Organization, "id"> = await request.json();
   if (!json.name) {
     const { error, status } = ERRORS.ORGANIZATION.INVALID_PARAMS.NAME_ONLY;
     return NextResponse.json(error, { status });
@@ -48,7 +47,7 @@ export async function PATCH(request: Request) {
     const { error, status } = ERRORS.ORGANIZATION.INVALID_PARAMS.ID_ONLY;
     return NextResponse.json(error, { status });
   }
-  const json = SuperJSON.parse<Omit<Organization, "id">>(await request.text());
+  const json: Omit<Organization, "id"> = await request.json();
   if (
     !(await prisma.organization.findFirst({
       where: { id },

@@ -2,7 +2,7 @@ import { Prisma } from "@prisma/client";
 import { APPLICABLE_MODELS } from "../middlewares/idGenerator";
 
 export const isId = (model: Prisma.ModelName, test: string) => {
-  if (APPLICABLE_MODELS.includes(model))
+  if (!APPLICABLE_MODELS.includes(model))
     throw new Error(
       'Can\'t check id of unsupported data models, please search for APPLICABLE_MODELS in package "database"'
     );
