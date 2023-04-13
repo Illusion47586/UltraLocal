@@ -11,11 +11,6 @@ generator erd {
   includeRelationFromFields = true
 }
 
-generator class_validator {
-  provider = "prisma-class-validator-generator"
-  output   = "../../core/src/dto"
-}
-
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
